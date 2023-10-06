@@ -23,8 +23,8 @@ void displayAllSongs(SongDatabase *database);
 void searchSong(SongDatabase *database, char *title);
 void removeSong(SongDatabase *database, char *title);
 void bubbleSortByTitle(Song *arr, int numSongs);
-void bubbleSortByArtist(Song *arr, int numSongs);
-int binarySearchByTitle(Song *arr, int left, int right, char *title);
+void insertionSortByArtist(Song *arr, int numSongs);
+int linearSearchByTitle(Song arr[], int numSongs, const char *searchTitle);
 void saveToFile(SongDatabase *database, const char *filename);
 void loadFromFile(SongDatabase *database, const char *filename);
 
@@ -40,7 +40,7 @@ int main() {
     int choice;
     do {
     	 
-        printf("\n +----------------Menu----------------+:\n");
+        printf("\n +----------------Menu----------------+\n");
         printf(" |  1. Add a song                     |\n");
         printf(" |  2. Display all songs              |\n");
         printf(" |  3. Search for a song by title     |\n");
@@ -49,7 +49,7 @@ int main() {
         printf(" |  6. Sort songs by artist           |\n");
         printf(" |  7. Save songs to file             |\n");
         printf(" |  8. Exit                           |\n");
-        printf(" +------------------------------------+:\n");
+        printf(" +------------------------------------+\n");
         printf(" Enter your choice: ");
 
         // Get user choice
@@ -83,8 +83,8 @@ int main() {
                   printf("Songs sorted by title.\n");
                      break;
               case 6:
-                  bubbleSortByArtist(database.songs, database.numSongs);
-                printf("Songs sorted by artist.\n");
+                  insertionSortByArtist(database.songs, database.numSongs);
+                  printf("Songs sorted by artist.\n");
                   break;
             case 7:
                 // Save the song database to file
@@ -98,8 +98,6 @@ int main() {
                 printf("Invalid choice. Please try again.\n");
         }
     } while (choice != 8);
-
-    // Free dynamically allocated memory
 
     return 0;
 }
@@ -144,29 +142,50 @@ void addSong(SongDatabase *database) {
 
 
 void displayAllSongs(SongDatabase *database) {
-    printf("Song Records:\n");
     int i;
-
+        printf("\n +-------------All Songs--------------+\n");
+        printf(" +------------------------------------+\n");
     for (i = 0; i < database->numSongs; i++) {
-        printf("Title: %s, Artist: %s, Album: %s, Genre: %d\n",database->songs[i].title, database->songs[i].artist,database->songs[i].album, database->songs[i].genre);
+        char songgenre[10];
+        switch (database->songs[i].genre){
+            case POP : strcpy(songgenre,"Pop"); break ;
+            case ROCK : strcpy(songgenre,"Rock"); break ;
+            case JAZZ : strcpy(songgenre,"Jazz"); break ;
+            case HIPHOP : strcpy(songgenre,"HIP-HOP"); break ;
+            default:strcpy(songgenre,"Invalid genre"); break; 
+            }
+        printf(" | Title  : %s\n | Artist : %s\n | Album  : %s\n | Genre  : %s",database->songs[i].title, database->songs[i].artist,database->songs[i].album,songgenre);
+        printf("\n +------------------------------------+\n");
     }
 }
 
 
 void searchSong(SongDatabase *database, char *title) {
-    int result = binarySearchByTitle(database->songs, 0, database->numSongs - 1, title);
+    // int result = binarySearchByTitle(database->songs, 0, database->numSongs - 1, title);
+     int result = linearSearchByTitle(database->songs, database->numSongs - 1, title);
 
     if (result == -1)
-        printf("Song with title \"%s\" not found.\n", title);
-    else
-        printf("Song found: Title: %s, Artist: %s, Album: %s, Genre: %d\n",
-               database->songs[result].title, database->songs[result].artist,
-               database->songs[result].album, database->songs[result].genre);
+        printf("\nSong with title \"%s\" not found.\n", title);
+
+    else{
+        char songgenre[10];
+        switch (database->songs[result].genre){
+            case POP : strcpy(songgenre,"Pop"); break ;
+            case ROCK : strcpy(songgenre,"Rock"); break ;
+            case JAZZ : strcpy(songgenre,"Jazz"); break ;
+            case HIPHOP : strcpy(songgenre,"HIP-HOP"); break ;
+            default:strcpy(songgenre,"Invalid genre"); break; 
+            }
+        printf("\n +-------------Found Song--------------+\n");
+        printf(" +-------------------------------------+\n");
+        printf(" | Title  : %s\n | Artist : %s\n | Album  : %s\n | Genre  : %s",database->songs[result].title, database->songs[result].artist,database->songs[result].album,songgenre);
+        printf("\n +-------------------------------------+\n");
+    }
 }
 
 
 void removeSong(SongDatabase *database, char *title) {
-    int index = binarySearchByTitle(database->songs, 0, database->numSongs - 1, title);
+     int index = linearSearchByTitle(database->songs, database->numSongs - 1, title);
 
     if (index == -1) {
         printf("Song with title \"%s\" not found.\n", title);
@@ -184,7 +203,6 @@ void removeSong(SongDatabase *database, char *title) {
         printf("Memory reallocation failed.\n");
         exit(EXIT_FAILURE);
     }
-
     printf("Song with title \"%s\" removed successfully.\n", title);
 }
 
@@ -230,21 +248,14 @@ void loadFromFile(SongDatabase *database, const char *filename) {
 }
 
 
-int binarySearchByTitle(Song *arr, int left, int right, char *title) {
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        int cmp = strcmp(arr[mid].title, title);
-
-        if (cmp == 0)
-            return mid;
-
-        if (cmp < 0)
-            left = mid + 1;
-        else
-            right = mid - 1;
+int linearSearchByTitle(Song arr[], int numSongs, const char *searchTitle) {
+    int i;
+       for ( i = 0; i < numSongs; i++) {
+        if (strcmp(searchTitle, arr[i].title) == 0)
+            return i;  // Title found, return the index
     }
 
-    return -1;  // Not found
+    return -1;  // Title not found
 }
 
 
@@ -254,19 +265,6 @@ void swapSong(Song *a, Song *b) {
     *b = temp;
 }
 
-
-
-void bubbleSortByArtist(Song *arr, int numSongs) {
-	int i;
-    for ( i = 0; i < numSongs - 1; i++) {
-    	int j;
-        for ( j = 0; j < numSongs - i - 1; j++) {
-            if (strcmp(arr[j].artist, arr[j + 1].artist) > 0) {
-                swapSong(&arr[j], &arr[j + 1]);
-            }
-        }
-    }
-}
 
 
 void bubbleSortByTitle(Song *arr, int numSongs) {
@@ -280,3 +278,23 @@ void bubbleSortByTitle(Song *arr, int numSongs) {
         }
     }
 }
+
+
+
+void insertionSortByArtist(Song *arr, int numSongs) {
+    int i, j;
+    Song key;
+
+    for (i = 1; i < numSongs; i++) {
+        key = arr[i];
+        j = i - 1;
+        // Move elements of arr[0..i-1] that are greater than key.artist
+        // to one position ahead of their current position
+        while (j >= 0 && strcmpi(arr[j].artist, key.artist) > 0) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+

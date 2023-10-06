@@ -1,4 +1,7 @@
-Song Title 1,Artist 1,Album 1,0
-Song Title 2,Artist 2,Album 2,1
-Song Title 3,Artist 3,Album 3,2
-Song Title 4,Artist 2,Album 4,1
+Arabic Kuthu,Anirudh Ravichander,Beast,0
+Fly Me To The Moon,Frank Sinatra,Ultimate Sinatra,2
+Boulevard of Broken Dreams,Green Day,American Idiot,1
+Mr Lonely,Akon,Konvict,3
+Nothing Else Matters,Metallica,Metallica,1
+Feeling Good,Michael Buble,It's Time,2
+Hypnotize,Notorious B.I.G,Life After Death,3
