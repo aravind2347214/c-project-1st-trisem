@@ -128,6 +128,7 @@ void addSong(SongDatabase *database) {
     scanf(" %[^\n]", newSong->album);
 
     printf("Enter genre (0: Pop, 1: Rock, 2: Jazz, 3: HipHop): ");
+
     int genre;
     scanf("%d", &genre);
 
@@ -146,7 +147,7 @@ void displayAllSongs(SongDatabase *database) {
         printf("\n +-------------All Songs--------------+\n");
         printf(" +------------------------------------+\n");
     for (i = 0; i < database->numSongs; i++) {
-        char songgenre[10];
+        char songgenre[20];
         switch (database->songs[i].genre){
             case POP : strcpy(songgenre,"Pop"); break ;
             case ROCK : strcpy(songgenre,"Rock"); break ;
@@ -168,7 +169,7 @@ void searchSong(SongDatabase *database, char *title) {
         printf("\nSong with title \"%s\" not found.\n", title);
 
     else{
-        char songgenre[10];
+        char songgenre[20];
         switch (database->songs[result].genre){
             case POP : strcpy(songgenre,"Pop"); break ;
             case ROCK : strcpy(songgenre,"Rock"); break ;
@@ -185,7 +186,7 @@ void searchSong(SongDatabase *database, char *title) {
 
 
 void removeSong(SongDatabase *database, char *title) {
-     int index = linearSearchByTitle(database->songs, database->numSongs - 1, title);
+     int index = linearSearchByTitle(database->songs, database->numSongs-1 , title);
 
     if (index == -1) {
         printf("Song with title \"%s\" not found.\n", title);
@@ -250,7 +251,7 @@ void loadFromFile(SongDatabase *database, const char *filename) {
 
 int linearSearchByTitle(Song arr[], int numSongs, const char *searchTitle) {
     int i;
-       for ( i = 0; i < numSongs; i++) {
+       for ( i = 0; i <=numSongs; i++) {
         if (strcmp(searchTitle, arr[i].title) == 0)
             return i;  // Title found, return the index
     }
