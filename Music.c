@@ -13,6 +13,13 @@ typedef struct {
     Genre genre;
 } Song;
 
+typedef union {
+    int duration;    // In seconds
+    int releaseYear;  // Year of release
+} SongAttribute;
+
+
+
 typedef struct {
     Song *songs;
     int numSongs;
@@ -33,7 +40,6 @@ int main() {
     database.numSongs = 0;
     database.songs = NULL;
 
-    // Load existing song records from file
     loadFromFile(&database, "songs.txt");
     
 
@@ -87,12 +93,10 @@ int main() {
                   printf("Songs sorted by artist.\n");
                   break;
             case 7:
-                // Save the song database to file
                 saveToFile(&database, "songs.txt");
                 printf("Songs saved to file.\n");
                 break;
             case 8:
-                // Exit the program
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");
